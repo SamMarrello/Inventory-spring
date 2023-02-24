@@ -33,7 +33,7 @@ class OrderController {
         this.assembler = assembler;
     }
 
-    @GetMapping("/orders")
+    @GetMapping("/api/orders")
     public CollectionModel<EntityModel<Order>> all() {
 
         List<EntityModel<Order>> orders = orderRepository.findAll().stream() //
@@ -44,7 +44,7 @@ class OrderController {
                 linkTo(methodOn(OrderController.class).all()).withSelfRel());
     }
 
-    @GetMapping("/orders/{id}")
+    @GetMapping("/api/orders/{id}")
     public EntityModel<Order> one(@PathVariable Long id) {
 
         Order order = orderRepository.findById(id) //
@@ -53,7 +53,7 @@ class OrderController {
         return assembler.toModel(order);
     }
 
-    @PostMapping("/orders")
+    @PostMapping("/api/orders")
     ResponseEntity<EntityModel<Order>> newOrder(@RequestBody Order order) {
 
         order.setStatus(Status.IN_PROGRESS);
@@ -64,7 +64,7 @@ class OrderController {
                 .body(assembler.toModel(newOrder));
     }
 
-    @DeleteMapping("/orders/{id}/cancel")
+    @DeleteMapping("/api/orders/{id}/cancel")
     public ResponseEntity<?> cancel(@PathVariable Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 
@@ -81,7 +81,7 @@ class OrderController {
                         .withDetail("You can't cancel an order that is in the " + order.getStatus() + " status"));
     }
 
-    @PutMapping("/orders/{id}/complete")
+    @PutMapping("/api/orders/{id}/complete")
     public ResponseEntity<?> complete(@PathVariable Long id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException(id));
 
